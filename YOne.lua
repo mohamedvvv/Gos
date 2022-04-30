@@ -475,7 +475,7 @@ function Yone:CastR(target)
 			local RPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.8, Radius = 120, Range = 1200, Speed = 1500, Collision = false})
 				  RPrediction:GetPrediction(target, myHero)
 			if RPrediction:CanHit(self.tyMenu.Pred.PredR:Value()+1) then
-				Control.CastSpell(HK_R, QPrediction.CastPosition)
+				Control.CastSpell(HK_R, RPrediction.CastPosition)
 				self.lastRTick = GetTickCount()
 			end	
 		end
