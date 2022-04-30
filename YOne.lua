@@ -231,7 +231,7 @@ end
 
 
 function Yone:LoadMenu()
-    self.tyMenu = MenuElement({type = MENU, id = "14", name = "YoneMomz"})
+    self.tyMenu = MenuElement({type = MENU, id = "1.0", name = "YoneMomz"})
 	self.tyMenu:MenuElement({name = " ", drop = {"Momz"}})
 	self.tyMenu:MenuElement({name = "Ping", id = "ping", value = 20, min = 0, max = 300, step = 1})
 	
