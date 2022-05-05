@@ -256,7 +256,6 @@ function Yone:LoadMenu()
     self.tyMenu:MenuElement({type = MENU, id = "clear", name = "LaneClear"})
         self.tyMenu.clear:MenuElement({id = "useQL", name = "[Q1]/[Q2]", value = true})
         self.tyMenu.clear:MenuElement({id = "useQ3", name = "[Q3]", value = true})
-		self.tyMenu.clear:MenuElement({id = "count", name = "Min Minions for [Q3]", value = 3, min = 1, max = 7})
 		self.tyMenu.clear:MenuElement({id = "useW", name = "[W]", value = true})
 	
 	self.tyMenu:MenuElement({type = MENU, id = "last", name = "LastHit Minion"})
@@ -379,20 +378,17 @@ function Yone:Clear()
     for i = 1, #minionInRange do
         local minion = minionInRange[i]
 		
-		if self.tyMenu.clear.useW:Value() and Ready(_W) and myHero.pos:DistanceTo(minion.pos) < 600 and not myHero.pathing.isDashing and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 < GetTickCount() then
+		if self.tyMenu.clear.useW:Value() and Ready(_W) and myHero.pos:DistanceTo(minion.pos) < 600 and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 < GetTickCount() then
 			Control.CastSpell(HK_W, minion.pos)
 			self.lastQTick = GetTickCount()
         end
 		
-        if self.tyMenu.clear.useQ3:Value() and Ready(_Q) and not myHero.pathing.isDashing and myHero:GetSpellData(0).name == "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
-			local Q3Count = GetLineTargetCount(myHero.pos, minion.pos, self.Q3.delay, self.Q3.speed, self.Q3.radius, self.Q3.range)
-			if Q3Count >= self.tyMenu.clear.count:Value() then
-				Control.CastSpell(HK_Q, minion.pos)
-				self.lastQTick = GetTickCount()
-			end	
-        end		
+        if self.tyMenu.clear.useQ3:Value() and Ready(_Q) and myHero:GetSpellData(0).name == "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
+			Control.CastSpell(HK_Q, minion.pos)
+			self.lastQTick = GetTickCount()	
+        end	
 
-        if self.tyMenu.clear.useQL:Value() and Ready(_Q) and myHero.pos:DistanceTo(minion.pos) < 475 and not myHero.pathing.isDashing and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 < GetTickCount() then
+        if self.tyMenu.clear.useQL:Value() and Ready(_Q) and myHero.pos:DistanceTo(minion.pos) < 475 and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 < GetTickCount() then
 			Control.CastSpell(HK_Q, minion.pos)
 			self.lastQTick = GetTickCount()
         end
@@ -406,18 +402,18 @@ function Yone:Jungle()
     for i = 1, #jungleInrange do
         local minion = jungleInrange[i]
 		
-		if self.tyMenu.jungle.useW:Value() and Ready(_W) and myHero.pos:DistanceTo(minion.pos) < 600 and not myHero.pathing.isDashing and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero)then
+		if self.tyMenu.jungle.useW:Value() and Ready(_W) and myHero.pos:DistanceTo(minion.pos) < 600 and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero)then
 			Control.CastSpell(HK_W, minion.pos)
 			self.lastWTick = GetTickCount()
         end
 
 
-        if self.tyMenu.jungle.useQ3:Value() and Ready(_Q) and not myHero.pathing.isDashing and myHero:GetSpellData(0).name == "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
+        if self.tyMenu.jungle.useQ3:Value() and Ready(_Q) and myHero:GetSpellData(0).name == "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
 			Control.CastSpell(HK_Q, minion.pos)
 			self.lastQTick = GetTickCount()	
         end		
 
-        if self.tyMenu.jungle.useQL:Value() and Ready(_Q) and myHero.pos:DistanceTo(minion.pos) < 475 and not myHero.pathing.isDashing and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero)then
+        if self.tyMenu.jungle.useQL:Value() and Ready(_Q) and myHero.pos:DistanceTo(minion.pos) < 475 and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero)then
 			Control.CastSpell(HK_Q, minion.pos)
 			self.lastQTick = GetTickCount()
         end
@@ -431,7 +427,7 @@ function Yone:LastHit()
     for i = 1, #minionInRange do
         local minion = minionInRange[i]
 		
-        if self.tyMenu.last.useQ3:Value() and Ready(_Q) and not myHero.pathing.isDashing and myHero:GetSpellData(0).name == "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
+        if self.tyMenu.last.useQ3:Value() and Ready(_Q) and myHero:GetSpellData(0).name == "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
 			local delay = myHero.pos:DistanceTo(minion.pos)/1500 + self.tyMenu.ping:Value()/1000
 			local hpPred = CheckHPPred(minion, delay)			
 			local Q3Dmg = self:GetQDamge(minion)
@@ -441,7 +437,7 @@ function Yone:LastHit()
 			end	
         end		
 
-        if self.tyMenu.last.useQL:Value() and Ready(_Q) and myHero.pos:DistanceTo(minion.pos) < 475 and not myHero.pathing.isDashing and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
+        if self.tyMenu.last.useQL:Value() and Ready(_Q) and myHero.pos:DistanceTo(minion.pos) < 475 and myHero:GetSpellData(0).name ~= "YoneQ3" and _G.SDK.Orbwalker:CanMove(myHero) and self.lastQTick + 300 then
 			local QDmg = self:GetQDamge(minion)
 			if QDmg > minion.health then
 				Control.CastSpell(HK_Q, minion.pos)
@@ -459,7 +455,7 @@ function Yone:GetHeroTarget(range)
 end
 
 function Yone:CastR(target)
-	if Ready(_R) and not myHero.pathing.isDashing 
+	if Ready(_R) 
 	and myHero:GetSpellData(0).name ~= "YoneQ3" 
 	and myHero.pos:DistanceTo(target.pos) <= self.R.range 
 	and _G.SDK.Orbwalker:CanMove(myHero) 
@@ -483,7 +479,7 @@ function Yone:CastR(target)
 end	
 
 function Yone:CastW(target)
-	if Ready(_W) and not myHero.pathing.isDashing 
+	if Ready(_W) 
 	and myHero:GetSpellData(0).name ~= "YoneQ3" 
 	and myHero.pos:DistanceTo(target.pos) <= self.W.range 
 	and _G.SDK.Orbwalker:CanMove(myHero) 
@@ -507,7 +503,7 @@ function Yone:CastW(target)
 end
 
 function Yone:CastQ(target)
-	if Ready(_Q) and not myHero.pathing.isDashing 
+	if Ready(_Q)
 	and myHero:GetSpellData(0).name ~= "YoneQ3" 
 	and myHero.pos:DistanceTo(target.pos) <= self.Q.range 
 	and _G.SDK.Orbwalker:CanMove(myHero) 
@@ -531,7 +527,7 @@ function Yone:CastQ(target)
 end	
 
 function Yone:CastQ3(target)
-    if Ready(_Q) and not myHero.pathing.isDashing 
+    if Ready(_Q)
     and myHero:GetSpellData(0).name == "YoneQ3"  
     and myHero.pos:DistanceTo(target.pos) <= self.Q3.range 
     and _G.SDK.Orbwalker:CanMove(myHero) 
