@@ -29,12 +29,6 @@ function LoadUnits()
 	end
 end
 
-local function GetDistanceSquared(vec1, vec2)
-    local dx = vec1.x - vec2.x
-    local dy = (vec1.z or vec1.y) - (vec2.z or vec2.y)
-    return dx * dx + dy * dy
-end
-
 local function GetDistanceSqr(pos1, pos2)
 	local pos2 = pos2 or myHero.pos
 	local dx = pos1.x - pos2.x
@@ -203,10 +197,10 @@ end
 class "Yone"
 
 function Yone:__init()
-    self.Q = {speed = math.huge, range = 475, delay = 0.35, radius = 80, collision = {nil}, type = "linear"}
-    self.Q3 = {speed = 1500, range = 1050, delay = 0.35, radius = 100, collision = {nil}, type = "linear"}
-	self.W = {speed = 2000, range = 600, delay = 0.15, radius = 0, angle = 80, collision = {nil}, type = "conic"}
-   self.R = {speed = 750, range = 1000, delay = 0.35, radius = 225, collision = {nil}, type = "linear"}
+    self.Q = {speed = 5000, range = 500, delay = 0.12, radius = 15, collision = {nil}, type = "linear"}
+    self.Q3 = {speed = 500, range = 1000, delay = 0.12, radius = 50, collision = {nil}, type = "linear"}
+	self.W = {speed = 500, range = 600, delay = 0.15, radius = 0, angle = 45, collision = {nil}, type = "conic"}
+   self.R = {speed = 1500, range = 1000, delay = 0.50, radius = 225, collision = {nil}, type = "linear"}
 
     self.lastQTick = GetTickCount()
 	
@@ -454,6 +448,7 @@ function Yone:GetHeroTarget(range)
     return target
 end
 
+
 function Yone:CastR(target)
 	if Ready(_R) 
 	and myHero:GetSpellData(0).name ~= "YoneQ3" 
@@ -468,7 +463,7 @@ function Yone:CastR(target)
 				self.lastRTick = GetTickCount()
 			end
 		else
-			local RPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.8, Radius = 120, Range = 1200, Speed = 1500, Collision = false})
+			local RPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.50, Radius = 225, Range = 1000, Speed = 1500, Collision = false})
 				  RPrediction:GetPrediction(target, myHero)
 			if RPrediction:CanHit(self.tyMenu.Pred.PredR:Value()+1) then
 				Control.CastSpell(HK_R, RPrediction.CastPosition)
@@ -477,6 +472,7 @@ function Yone:CastR(target)
 		end
     end
 end	
+
 
 function Yone:CastW(target)
 	if Ready(_W) 
@@ -492,7 +488,7 @@ function Yone:CastW(target)
 				self.lastQTick = GetTickCount()
 			end
 		else
-			local WPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.3, Radius = 300, Range = 600, Speed = 2000, Collision = false})
+			local WPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.15, Radius = 0, Range = 600, Speed = 500, Collision = false})
 				  WPrediction:GetPrediction(target, myHero)
 			if WPrediction:CanHit(self.tyMenu.Pred.PredW:Value()+1) then
 				Control.CastSpell(HK_W, WPrediction.CastPosition)
@@ -502,6 +498,7 @@ function Yone:CastW(target)
     end
 end
 
+ 
 function Yone:CastQ(target)
 	if Ready(_Q)
 	and myHero:GetSpellData(0).name ~= "YoneQ3" 
@@ -516,7 +513,7 @@ function Yone:CastQ(target)
 				self.lastQTick = GetTickCount()
 			end
 		else
-			local QPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.35, Radius = 80, Range = 475, Speed = math.huge, Collision = false})
+			local QPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.12, Radius = 15, Range = 500, Speed = 5000, Collision = false})
 				  QPrediction:GetPrediction(target, myHero)
 			if QPrediction:CanHit(self.tyMenu.Pred.PredQ:Value()+1) then
 				Control.CastSpell(HK_Q, QPrediction.CastPosition)
@@ -524,7 +521,7 @@ function Yone:CastQ(target)
 			end	
 		end
     end
-end	
+end
 
 function Yone:CastQ3(target)
     if Ready(_Q)
@@ -540,7 +537,7 @@ function Yone:CastQ3(target)
 				self.lastQTick = GetTickCount()
 			end
 		else
-			local QPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.35, Radius = 120, Range = 1060, Speed = 1700, Collision = false})
+			local QPrediction = GGPrediction:SpellPrediction({Type = GGPrediction.SPELLTYPE_LINE, Delay = 0.12, Radius = 50, Range = 1000, Speed = 500, Collision = false})
 				  QPrediction:GetPrediction(target, myHero)
 			if QPrediction:CanHit(self.tyMenu.Pred.PredQ3:Value()+1) then
 				Control.CastSpell(HK_Q, QPrediction.CastPosition)
@@ -561,7 +558,7 @@ local function OnProcessSpell()
 end
 
 function Yone:GetQDamge(obj)
-    local baseDMG = ({20,45,70,95,120})[myHero:GetSpellData(0).level]
+    local baseDMG = ({20,40,60,80,100})[myHero:GetSpellData(0).level]
     local AD = myHero.totalDamage
     local dmg = _G.SDK.Damage:CalculateDamage(myHero, obj, _G.SDK.DAMAGE_TYPE_PHYSICAL ,  baseDMG + AD )
 
@@ -578,13 +575,6 @@ function Yone:HasBuff(unit, name)
     return false
 end
 
-function Yone:IsInRange(pos1, pos2, range)
-    if GetDistanceSquared(pos1,pos2) < range * range then
-        return true
-    end
-    return false
-end
-
 DelayAction(function()
 	if table.contains(Heroes, myHero.charName) then		
 		require "DamageLib"
@@ -593,4 +583,3 @@ DelayAction(function()
 		LoadUnits()
 	end		
 end, math.max(0.07, 10 - Game.Timer()))
-
